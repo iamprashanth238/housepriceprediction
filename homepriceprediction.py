@@ -1,47 +1,58 @@
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error
+from sklearn.model_selection import train_test_split
 import pandas as pd
-import numpy as np
 
-#reading the daa from the dataset
-data = pd.read_csv('C:/Users/Admin/Desktop/melb_data.csv')
+data = pd.read_csv('D:\Datasets\melb_data.csv')
 
-#analize the data by describing
-#print(data.describe())
-
-#removing the missing values using dropna()
 data = data.dropna()
 
-#first know what are are columns are there using columns
-name_columns = data.columns
-#print(name_columns)
-
-# targeting a output variable i.e in my situation prices and storing in y
 y = data.Price
-#print(y.head())
 
-# above y is output. But we need to give input for the for model
-# there are somany variable/columns we need only some columns which helps to find the output
-# output is depend on the features we give 
-
-#selecting few columns
 features = ['Rooms','Bathroom','Landsize','Lattitude','Longtitude']
 
-#now including this features to the existing data set and storing in the X
 X = data[features]
 
-# now we perform regression between the X,y
-# for that we are using sklearn.tree using DecisionTreeRegressor
-from sklearn.tree import DecisionTreeRegressor
+# building model with DecisionTreeRegressor
+dt_model = DecisionTreeRegressor(random_state=1)
 
-#now create a model 
-home_model = DecisionTreeRegressor(random_state=1)
+#fitting model with actual data
+dt_model.fit(X,y)
+dt_predic1 = dt_model.predict(X)
+mae1 = mean_absolute_error(dt_predic1,y)
+print("Decision Tree Regressor")
+print("Mean Absolute Error for actual data:")
+print(mae1)
 
-#now fit the X,y to the model
-home_model.fit(X,y)
+#now split the data into train_X, val_x, train_y, val_y
+train_X, val_X, train_y, val_y = train_test_split(X,y, random_state=1)
 
-#now we predict the output of first five houes
-print("The price prediction of 5 houses are :")
-print(X.head())
-print("Price prediction are :")
-print(home_model.predict(X.head()))
+# fitting the model with split data for DesicionTreeRegressor
+dt_model.fit(train_X,train_y)
+dt_predic2 = dt_model.predict(val_X)
+mae2 = mean_absolute_error(dt_predic2,val_y)
+print("Mean Absolute Error for split data:")
+print(mae2)
 
-# wow we created a simple model
+
+# lets built model with another method with RandomForestRegressor
+rf_model = RandomForestRegressor(random_state = 1)
+
+rf_model.fit(X,y)
+rf_predic1 = rf_model.predict(X)
+
+# mean absolute error
+mae3 = mean_absolute_error(rf_predic1, y)
+print("\nRandomForestRegressor")
+print("Mean Absoulte Error for Raw data : ")
+print(mae3)
+
+#lets fit with split data 
+rf_model.fit(train_X,train_y)
+rf_predic2 = rf_model.predict(val_X)
+
+# absolute error
+mae4 = mean_absolute_error(rf_predic2, val_y)
+print("Mean Absoulte Error for split data : ")
+print(mae4)

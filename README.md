@@ -1,6 +1,6 @@
 # housepriceprediction
-simple model which predict prices of houses.
-this is a first stage of model.
-we does not validated the model.
-this is small model which i have done while learning Machine Learning.
-This model based on regression 
+This is a model which predict house prices. this model is built using two method 
+1. DecisionTreeRegressor
+2. RandomForestRegressor
+This model work based on the historical data which we gave as input.
+At we comparied performence between two method by calculating the mean absolute error.
